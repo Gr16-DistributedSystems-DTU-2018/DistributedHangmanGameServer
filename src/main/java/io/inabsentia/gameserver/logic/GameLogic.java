@@ -15,6 +15,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
@@ -239,6 +240,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public void logIn(String username, String password) throws RemoteException {
         try {
             currentUser = userController.hentBruger(username, password);
+            System.out.println("[" + LocalDateTime.now() + "]: " + username + " has logged in.");
         } catch (Exception e) {
             throw new RemoteException("Log In failed!");
         }
@@ -248,6 +250,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public void logOut() throws RemoteException {
         if (!isLoggedIn())
             throw new RemoteException("Not logged in!");
+        System.out.println("[" + LocalDateTime.now() + "]: " + currentUser.brugernavn + " has logged out.");
         currentUser = null;
     }
 
@@ -315,12 +318,8 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
                 replaceAll(" [a-zæøå] ", " "). // fjern 1-bogstavsord
                 replaceAll(" [a-zæøå][a-zæøå] ", " "); // fjern 2-bogstavsord
 
-        System.out.println("data = " + data);
-        System.out.println("data = " + Arrays.asList(data.split("\\s+")));
         wordList.clear();
         wordList.addAll(new HashSet<>(Arrays.asList(data.split(" "))));
-
-        System.out.println("words: " + wordList);
     }
 
 }
