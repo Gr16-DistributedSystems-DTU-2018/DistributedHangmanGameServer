@@ -19,7 +19,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@WebService(endpointInterface = "io.inabsentia.gameserver.main.MainSOAP")
+@WebService(endpointInterface = "io.inabsentia.gameserver.logic.soap.IGameLogic")
 public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
     private static final int MAXIMUM_LIFE = 6;

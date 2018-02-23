@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/GameServer_jar</output-path>
     <root id="archive" name="GameServer.jar">
       <element id="module-output" name="GameServer" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/brugerautorisation.jar" path-in-jar="/" />
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
       </element>
