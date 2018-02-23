@@ -1,13 +1,13 @@
 package io.inabsentia.gameserver.main;
 
-import io.inabsentia.gameserver.logic.GameLogic;
-import io.inabsentia.gameserver.logic.IGameLogic;
+import io.inabsentia.gameserver.logic.rmi.GameLogic;
+import io.inabsentia.gameserver.logic.rmi.IGameLogic;
 import io.inabsentia.gameserver.util.Utils;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-public final class Main {
+public final class MainRMI {
 
     public static void main(String[] args) throws Exception {
         LocateRegistry.createRegistry(Integer.parseInt(String.valueOf(Utils.REMOTE_PORT)));
@@ -16,7 +16,7 @@ public final class Main {
         IGameLogic logic = new GameLogic();
         Naming.rebind(Utils.RMI_STUB_URL_REMOTE_LOGIC_JAVABOG, logic);
 
-        System.out.println("GameLogic registered at: " + Utils.RMI_STUB_URL_REMOTE_LOGIC_JAVABOG);
+        System.out.println("GameLogic (RMI) registered at: " + Utils.RMI_STUB_URL_REMOTE_LOGIC_JAVABOG);
     }
 
 }

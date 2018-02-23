@@ -1,4 +1,4 @@
-package io.inabsentia.gameserver.logic;
+package io.inabsentia.gameserver.logic.rmi;
 
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;

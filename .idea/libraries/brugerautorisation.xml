@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="brugerautorisation">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/brugerautorisation.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
