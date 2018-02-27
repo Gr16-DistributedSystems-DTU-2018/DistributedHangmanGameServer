@@ -1,8 +1,8 @@
-package io.inabsentia.gameserver.main;
+package server.main;
 
-import io.inabsentia.gameserver.logic.soap.GameLogic;
-import io.inabsentia.gameserver.logic.soap.IGameLogic;
-import io.inabsentia.gameserver.util.Utils;
+import server.logic.soap.GameLogic;
+import server.logic.soap.IGameLogic;
+import server.util.Utils;
 
 import javax.xml.ws.Endpoint;
 

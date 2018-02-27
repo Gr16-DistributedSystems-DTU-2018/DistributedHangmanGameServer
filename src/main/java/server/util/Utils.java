@@ -1,4 +1,4 @@
-package io.inabsentia.gameserver.util;
+package server.util;
 
 public final class Utils {
 

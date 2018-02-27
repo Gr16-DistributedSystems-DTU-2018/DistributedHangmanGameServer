@@ -1,8 +1,8 @@
-package io.inabsentia.gameserver.main;
+package server.main;
 
-import io.inabsentia.gameserver.logic.rmi.GameLogic;
-import io.inabsentia.gameserver.logic.rmi.IGameLogic;
-import io.inabsentia.gameserver.util.Utils;
+import server.logic.rmi.GameLogic;
+import server.logic.rmi.IGameLogic;
+import server.util.Utils;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
