@@ -1,10 +1,11 @@
-package server.logic.rmi;
+package server.logic.soap;
 
 import brugerautorisation.data.Bruger;
 import server.controller.IUserController;
 import server.controller.UserController;
 import server.util.Utils;
 
+import javax.jws.WebService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
+@WebService(endpointInterface = "server.logic.soap.IGameLogic")
 public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
     private final int MAXIMUM_LIFE = 6;

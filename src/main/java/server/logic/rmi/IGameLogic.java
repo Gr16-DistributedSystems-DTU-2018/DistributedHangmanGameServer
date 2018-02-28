@@ -15,7 +15,7 @@ public interface IGameLogic extends Remote {
     void stopGameTimer() throws RemoteException;
     int getGameTimeElapsed() throws RemoteException;
 
-    String getGuessedCharacters() throws RemoteException;
+    String getGuessedChars() throws RemoteException;
 
     String getCurrentGuessedWord() throws RemoteException;
 
