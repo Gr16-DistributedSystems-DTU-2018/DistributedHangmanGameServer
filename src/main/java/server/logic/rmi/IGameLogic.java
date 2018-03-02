@@ -9,6 +9,7 @@ public interface IGameLogic extends Remote {
     /* Game Logic */
     boolean guess(char ch) throws RemoteException;
 
+    void resetScore() throws RemoteException;
     void resetGame() throws RemoteException;
 
     void startGameTimer() throws RemoteException;
@@ -22,6 +23,7 @@ public interface IGameLogic extends Remote {
     int getCurrentLife() throws RemoteException;
     int getCurrentScore() throws RemoteException;
 
+    boolean isCharGuessed(char ch) throws RemoteException;
     boolean isGameWon() throws RemoteException;
     boolean isGameLost() throws RemoteException;
     boolean isHighScore() throws RemoteException;

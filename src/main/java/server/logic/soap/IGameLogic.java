@@ -12,6 +12,7 @@ public interface IGameLogic extends Remote {
     /* Game Logic */
     @WebMethod boolean guess(char ch) throws RemoteException;
 
+    @WebMethod void resetScore() throws RemoteException;
     @WebMethod void resetGame() throws RemoteException;
 
     @WebMethod void startGameTimer() throws RemoteException;
@@ -25,6 +26,7 @@ public interface IGameLogic extends Remote {
     @WebMethod int getCurrentLife() throws RemoteException;
     @WebMethod int getCurrentScore() throws RemoteException;
 
+    @WebMethod boolean isCharGuessed(char ch) throws RemoteException;
     @WebMethod boolean isGameWon() throws RemoteException;
     @WebMethod boolean isGameLost() throws RemoteException;
     @WebMethod boolean isHighScore() throws RemoteException;

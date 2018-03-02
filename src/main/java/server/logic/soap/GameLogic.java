@@ -19,7 +19,9 @@ import java.util.*;
 @WebService(endpointInterface = "server.logic.soap.IGameLogic")
 public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
-    private final int MAXIMUM_LIFE = 6;
+    public static final int MAXIMUM_LIFE = 6;
+    public static final int SINGLE_CHAR_GUESS_SCORE = 10;
+    public static final int LIFE_DECREMENT = 1;
 
     private int life = MAXIMUM_LIFE;
 
@@ -39,6 +41,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
         wordList = new ArrayList<>();
         usedCharList = new ArrayList<>();
         resetGame();
+        resetScore();
 
         try {
             System.out.println("GameLogic registered: " + RemoteServer.getClientHost());
@@ -56,10 +59,22 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
         if (word.contains(Character.toString(ch))) {
             removeChar(ch);
+            addGameScore(SINGLE_CHAR_GUESS_SCORE);
+
+            if (isGameWon())
+                addGameScore(getWordScore());
+
             return true;
         } else {
+            if (life > 0)
+                life -= LIFE_DECREMENT;
             return false;
         }
+    }
+
+    @Override
+    public void resetScore() throws RemoteException {
+        score = 0;
     }
 
     @Override
@@ -69,10 +84,8 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
         hiddenWord = createHiddenWord();
         stopGameTimer();
         life = MAXIMUM_LIFE;
-        score = 0;
         usedCharList = new ArrayList<>();
     }
-
 
     @Override
     public final void startGameTimer() throws RemoteException {
@@ -110,6 +123,13 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     @Override
     public int getCurrentScore() throws RemoteException {
         return score;
+    }
+
+    @Override
+    public boolean isCharGuessed(char ch) throws RemoteException {
+        for (Character c : usedCharList)
+            if (c == ch) return true;
+        return false;
     }
 
     @Override
@@ -232,12 +252,6 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
         wordList.clear();
         wordList.addAll(new HashSet<>(Arrays.asList(data.split(" "))));
-    }
-
-    private boolean isCharGuessed(char ch) throws RemoteException {
-        for (Character c : usedCharList)
-            if (c == ch) return true;
-        return false;
     }
 
     private void initWordList() {
