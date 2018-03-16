@@ -1,23 +1,18 @@
-package server.logic.soap;
+package server.logic.local;
 
 import brugerautorisation.data.Bruger;
 import server.controller.IUserController;
 import server.controller.UserController;
 import server.util.Utils;
 
-import javax.jws.WebService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URL;
-import java.rmi.RemoteException;
-import java.rmi.server.RemoteServer;
-import java.rmi.server.ServerNotActiveException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-@WebService(endpointInterface = "server.logic.soap.IGameLogic")
-public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
+public final class GameLogic implements IGameLogic, Serializable {
 
     public static final int MAXIMUM_LIFE = 6;
     public static final int SINGLE_CHAR_GUESS_SCORE = 10;
@@ -25,7 +20,6 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
     private int life = MAXIMUM_LIFE;
 
-    private int time = 0;
     private int score = 0;
 
     private String word;
@@ -36,16 +30,14 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
     private final IUserController userController = UserController.getInstance();
 
-
-    public GameLogic() throws RemoteException {
+    public GameLogic() {
         wordList = new ArrayList<>();
         usedCharList = new ArrayList<>();
-        resetGame();
-        resetScore();
 
         try {
-            System.out.println("GameLogic registered: " + RemoteServer.getClientHost());
-        } catch (ServerNotActiveException e) {
+            resetScore();
+            resetGame();
+        } catch (GameException e) {
             e.printStackTrace();
         }
     }
@@ -54,7 +46,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
      *         GAME LOGIC CODE RESIDES HERE!        *
      ************************************************/
     @Override
-    public boolean guess(char ch) throws RemoteException {
+    public boolean guess(char ch) throws GameException {
         useChar(ch);
 
         if (word.contains(Character.toString(ch))) {
@@ -73,37 +65,21 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     }
 
     @Override
-    public void resetScore() throws RemoteException {
+    public void resetScore() throws GameException {
         score = 0;
     }
 
     @Override
-    public final void resetGame() throws RemoteException {
+    public final void resetGame() throws GameException {
         initWordList();
         word = getRandomWord();
         hiddenWord = createHiddenWord();
-        stopGameTimer();
         life = MAXIMUM_LIFE;
         usedCharList = new ArrayList<>();
     }
 
     @Override
-    public final void startGameTimer() throws RemoteException {
-
-    }
-
-    @Override
-    public final void stopGameTimer() throws RemoteException {
-
-    }
-
-    @Override
-    public final int getGameTimeElapsed() throws RemoteException {
-        return time;
-    }
-
-    @Override
-    public final String getGuessedChars() throws RemoteException {
+    public final String getGuessedChars() throws GameException {
         StringBuilder sb = new StringBuilder();
         for (Character c : usedCharList)
             sb.append(c);
@@ -111,29 +87,29 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     }
 
     @Override
-    public final String getCurrentGuessedWord() throws RemoteException {
+    public final String getCurrentGuessedWord() throws GameException {
         return hiddenWord;
     }
 
     @Override
-    public int getCurrentLife() throws RemoteException {
+    public int getCurrentLife() throws GameException {
         return life;
     }
 
     @Override
-    public int getCurrentScore() throws RemoteException {
+    public int getCurrentScore() throws GameException {
         return score;
     }
 
     @Override
-    public boolean isCharGuessed(char ch) throws RemoteException {
+    public boolean isCharGuessed(char ch) throws GameException {
         for (Character c : usedCharList)
             if (c == ch) return true;
         return false;
     }
 
     @Override
-    public final boolean isGameWon() throws RemoteException {
+    public final boolean isGameWon() throws GameException {
         if (word == null || hiddenWord == null)
             return false;
 
@@ -145,20 +121,20 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     }
 
     @Override
-    public final boolean isGameLost() throws RemoteException {
+    public final boolean isGameLost() throws GameException {
         return life == 0;
     }
 
     @Override
-    public boolean isHighScore() throws RemoteException {
+    public boolean isHighScore() throws GameException {
         if (!isLoggedIn())
-            throw new RemoteException("Not logged in!");
+            throw new GameException("Not logged in!");
 
         Bruger user;
         try {
             user = userController.getCurrentUser();
         } catch (IUserController.UserControllerException e) {
-            throw new RemoteException("Could not find logged in user!");
+            throw new GameException("Could not find logged in user!");
         }
 
         String scoreStr = getUserField(user.brugernavn, user.adgangskode, Utils.HIGH_SCORE_FIELD_KEY);
@@ -171,52 +147,52 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
      *    USER AUTHORIZATION LOGIC RESIDES HERE!    *
      ************************************************/
     @Override
-    public final void logIn(String username, String password) throws RemoteException {
+    public final void logIn(String username, String password) throws GameException {
         try {
             userController.logIn(username, password);
         } catch (IUserController.UserControllerException e) {
-            throw new RemoteException(e.getMessage(), e);
+            throw new GameException(e.getMessage());
         }
     }
 
     @Override
-    public final void logOut() throws RemoteException {
+    public final void logOut() throws GameException {
         try {
             userController.logOut();
         } catch (IUserController.UserControllerException e) {
-            throw new RemoteException(e.getMessage(), e);
+            throw new GameException(e.getMessage());
         }
     }
 
     @Override
-    public final void setUserField(String username, String password, String userFieldKey, String value) throws RemoteException {
+    public final void setUserField(String username, String password, String userFieldKey, String value) throws GameException {
         try {
             userController.setUserField(username, password, userFieldKey, value);
         } catch (IUserController.UserControllerException e) {
-            throw new RemoteException(e.getMessage(), e);
+            throw new GameException(e.getMessage());
         }
     }
 
     @Override
-    public final String getUserField(String username, String password, String userFieldKey) throws RemoteException {
+    public final String getUserField(String username, String password, String userFieldKey) throws GameException {
         try {
             return userController.getUserField(username, password, userFieldKey);
         } catch (IUserController.UserControllerException e) {
-            throw new RemoteException(e.getMessage(), e);
+            throw new GameException(e.getMessage());
         }
     }
 
     @Override
-    public final Bruger getCurrentUser() throws RemoteException {
+    public final Bruger getCurrentUser() throws GameException {
         try {
             return userController.getCurrentUser();
         } catch (IUserController.UserControllerException e) {
-            throw new RemoteException(e.getMessage(), e);
+            throw new GameException(e.getMessage());
         }
     }
 
     @Override
-    public final boolean isLoggedIn() throws RemoteException {
+    public final boolean isLoggedIn() throws GameException {
         return userController.isLoggedIn();
     }
 
@@ -224,7 +200,6 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
      *        PRIVATE METHODS RESIDES HERE!         *
      ************************************************/
     private static String fetchURL(String url) throws IOException {
-        System.out.println("Fetching data from: " + url);
         BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
         StringBuilder sb = new StringBuilder();
         String linje = br.readLine();
@@ -300,11 +275,11 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
         }
     }
 
-    private void addGameScore(int amount) throws RemoteException {
+    private void addGameScore(int amount) {
         score += amount;
     }
 
-    private int getWordScore() throws RemoteException {
+    private int getWordScore() {
         return hiddenWord.length();
     }
 

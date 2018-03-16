@@ -12,12 +12,7 @@ public interface IGameLogic extends Remote {
     void resetScore() throws RemoteException;
     void resetGame() throws RemoteException;
 
-    void startGameTimer() throws RemoteException;
-    void stopGameTimer() throws RemoteException;
-    int getGameTimeElapsed() throws RemoteException;
-
     String getGuessedChars() throws RemoteException;
-
     String getCurrentGuessedWord() throws RemoteException;
 
     int getCurrentLife() throws RemoteException;
