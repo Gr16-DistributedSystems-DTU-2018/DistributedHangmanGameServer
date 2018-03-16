@@ -3,21 +3,17 @@ package server.controller;
 import brugerautorisation.data.Bruger;
 
 public interface IUserController {
-    void logIn(String username, String password) throws UserControllerException;
-    void logOut() throws UserControllerException;
-
+    Bruger getUser(String username, String password) throws UserControllerException;
     void setUserField(String username, String password, String userFieldKey, String value) throws UserControllerException;
     String getUserField(String username, String password, String userFieldKey) throws UserControllerException;
-
-    Bruger getCurrentUser() throws UserControllerException;
-    boolean isLoggedIn();
+    void sendUserEmail(String username, String password, String subject, String msg) throws UserControllerException;
+    void sendForgotPasswordEmail(String username, String msg) throws UserControllerException;
+    void changeUserPassword(String username, String oldPassword, String newPassword) throws UserControllerException;
 
     class UserControllerException extends Exception {
-
         public UserControllerException(String msg) {
             super(msg);
         }
-
     }
 
 }

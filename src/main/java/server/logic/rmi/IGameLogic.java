@@ -1,35 +1,21 @@
 package server.logic.rmi;
 
-import brugerautorisation.data.Bruger;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IGameLogic extends Remote {
-    /* Game Logic */
     boolean guess(char ch) throws RemoteException;
 
     void resetScore() throws RemoteException;
     void resetGame() throws RemoteException;
 
     String getGuessedChars() throws RemoteException;
-    String getCurrentGuessedWord() throws RemoteException;
-
-    int getCurrentLife() throws RemoteException;
-    int getCurrentScore() throws RemoteException;
+    String getWord() throws RemoteException;
+    int getLife() throws RemoteException;
+    int getScore() throws RemoteException;
 
     boolean isCharGuessed(char ch) throws RemoteException;
     boolean isGameWon() throws RemoteException;
     boolean isGameLost() throws RemoteException;
-    boolean isHighScore() throws RemoteException;
-
-    /* User Authorization */
-    void logIn(String username, String password) throws RemoteException;
-    void logOut() throws RemoteException;
-
-    void setUserField(String username, String password, String userFieldKey, String value) throws RemoteException;
-    String getUserField(String username, String password, String userFieldKey) throws RemoteException;
-
-    Bruger getCurrentUser() throws RemoteException;
-    boolean isLoggedIn() throws RemoteException;
+    boolean isHighScore(String username, String password) throws RemoteException;
 }

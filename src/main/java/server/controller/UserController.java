@@ -8,12 +8,10 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.time.LocalDateTime;
 
 public final class UserController implements IUserController {
 
     private Brugeradmin userAdmin;
-    private Bruger currentUser;
 
     private static IUserController instance;
 
@@ -28,9 +26,9 @@ public final class UserController implements IUserController {
     private UserController() {
         if (userAdmin == null) {
             try {
-                userAdmin = (Brugeradmin) Naming.lookup(Utils.RMI_STUB_URL_USERS);
+                userAdmin = (Brugeradmin) Naming.lookup(Utils.RMI_STUB_URL_BRUGERAUTORISATION);
             } catch (NotBoundException | RemoteException | MalformedURLException e) {
-                throw new RuntimeException("Failed initializing Brugerautorisation STUB: " + e.getMessage());
+                throw new RuntimeException("Failed to initialize Brugerautorisation RMI STUB: " + e.getMessage());
             }
         }
     }
@@ -40,21 +38,12 @@ public final class UserController implements IUserController {
     }
 
     @Override
-    public void logIn(String username, String password) throws UserControllerException {
+    public Bruger getUser(String username, String password) throws UserControllerException {
         try {
-            currentUser = userAdmin.hentBruger(username, password);
-            System.out.println("[" + LocalDateTime.now() + "]: " + username + " has logged in.");
-        } catch (Exception e) {
-            throw new UserControllerException("Log In failed!");
+            return userAdmin.hentBruger(username, password);
+        } catch (RemoteException e) {
+            throw new UserControllerException("Invalid credentials!");
         }
-    }
-
-    @Override
-    public void logOut() throws UserControllerException {
-        if (!isLoggedIn())
-            throw new UserControllerException("Not logged in!");
-        System.out.println("[" + LocalDateTime.now() + "]: " + currentUser.brugernavn + " has logged out.");
-        currentUser = null;
     }
 
     @Override
@@ -78,20 +67,35 @@ public final class UserController implements IUserController {
 
             return userFieldString;
         } catch (RemoteException e) {
-            throw new UserControllerException("No user field found at key '" + userFieldKey + "!");
+            throw new UserControllerException("No user field found at key '" + userFieldKey + " for user " + username + "!");
         }
     }
 
     @Override
-    public Bruger getCurrentUser() throws UserControllerException {
-        if (!isLoggedIn())
-            throw new UserControllerException("Not logged in!");
-        return currentUser;
+    public void sendUserEmail(String username, String password, String subject, String msg) throws UserControllerException {
+        try {
+            userAdmin.sendEmail(username, password, subject, msg);
+        } catch (RemoteException e) {
+            throw new UserControllerException("Failed to send email for user: " + username);
+        }
     }
 
     @Override
-    public boolean isLoggedIn() {
-        return currentUser != null;
+    public void sendForgotPasswordEmail(String username, String msg) throws UserControllerException {
+        try {
+            userAdmin.sendGlemtAdgangskodeEmail(username, msg);
+        } catch (RemoteException e) {
+            throw new UserControllerException("Failed to send forgotPasswordEmail for user: " + username);
+        }
+    }
+
+    @Override
+    public void changeUserPassword(String username, String oldPassword, String newPassword) throws UserControllerException {
+        try {
+            userAdmin.ændrAdgangskode(username, oldPassword, newPassword);
+        } catch (RemoteException e) {
+            throw new UserControllerException("Failed to change password for user: " + username);
+        }
     }
 
 }

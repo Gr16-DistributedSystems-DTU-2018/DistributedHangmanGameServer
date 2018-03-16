@@ -3,14 +3,13 @@ package server.logic.local;
 import brugerautorisation.data.Bruger;
 import server.controller.IUserController;
 import server.controller.UserController;
+import server.rest_services.RESTWordService;
 import server.util.Utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public final class GameLogic implements IGameLogic, Serializable {
 
@@ -37,7 +36,7 @@ public final class GameLogic implements IGameLogic, Serializable {
         try {
             resetScore();
             resetGame();
-        } catch (GameException e) {
+        } catch (GameLogicException e) {
             e.printStackTrace();
         }
     }
@@ -46,7 +45,7 @@ public final class GameLogic implements IGameLogic, Serializable {
      *         GAME LOGIC CODE RESIDES HERE!        *
      ************************************************/
     @Override
-    public boolean guess(char ch) throws GameException {
+    public boolean guess(char ch) throws GameLogicException {
         useChar(ch);
 
         if (word.contains(Character.toString(ch))) {
@@ -65,12 +64,12 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     @Override
-    public void resetScore() throws GameException {
+    public void resetScore() throws GameLogicException {
         score = 0;
     }
 
     @Override
-    public final void resetGame() throws GameException {
+    public final void resetGame() throws GameLogicException {
         initWordList();
         word = getRandomWord();
         hiddenWord = createHiddenWord();
@@ -79,7 +78,7 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     @Override
-    public final String getGuessedChars() throws GameException {
+    public final String getGuessedChars() throws GameLogicException {
         StringBuilder sb = new StringBuilder();
         for (Character c : usedCharList)
             sb.append(c);
@@ -87,29 +86,29 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     @Override
-    public final String getCurrentGuessedWord() throws GameException {
+    public final String getWord() throws GameLogicException {
         return hiddenWord;
     }
 
     @Override
-    public int getCurrentLife() throws GameException {
+    public int getLife() throws GameLogicException {
         return life;
     }
 
     @Override
-    public int getCurrentScore() throws GameException {
+    public int getScore() throws GameLogicException {
         return score;
     }
 
     @Override
-    public boolean isCharGuessed(char ch) throws GameException {
+    public boolean isCharGuessed(char ch) throws GameLogicException {
         for (Character c : usedCharList)
             if (c == ch) return true;
         return false;
     }
 
     @Override
-    public final boolean isGameWon() throws GameException {
+    public final boolean isGameWon() throws GameLogicException {
         if (word == null || hiddenWord == null)
             return false;
 
@@ -121,120 +120,42 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     @Override
-    public final boolean isGameLost() throws GameException {
+    public final boolean isGameLost() throws GameLogicException {
         return life == 0;
     }
 
     @Override
-    public boolean isHighScore() throws GameException {
-        if (!isLoggedIn())
-            throw new GameException("Not logged in!");
-
+    public boolean isHighScore(String username, String password) throws GameLogicException {
         Bruger user;
         try {
-            user = userController.getCurrentUser();
+            user = userController.getUser(username, password);
         } catch (IUserController.UserControllerException e) {
-            throw new GameException("Could not find logged in user!");
+            throw new GameLogicException(e.getMessage());
         }
 
-        String scoreStr = getUserField(user.brugernavn, user.adgangskode, Utils.HIGH_SCORE_FIELD_KEY);
-        int userScore = Integer.parseInt(scoreStr);
+        String scoreStr = null;
+        int userScore = 0;
+
+        try {
+            scoreStr = userController.getUserField(username, password, Utils.HIGH_SCORE_FIELD_KEY);
+            userScore = Integer.parseInt(scoreStr);
+        } catch (IUserController.UserControllerException e) {
+            e.printStackTrace();
+            return false;
+        }
 
         return score > userScore;
     }
 
     /************************************************
-     *    USER AUTHORIZATION LOGIC RESIDES HERE!    *
-     ************************************************/
-    @Override
-    public final void logIn(String username, String password) throws GameException {
-        try {
-            userController.logIn(username, password);
-        } catch (IUserController.UserControllerException e) {
-            throw new GameException(e.getMessage());
-        }
-    }
-
-    @Override
-    public final void logOut() throws GameException {
-        try {
-            userController.logOut();
-        } catch (IUserController.UserControllerException e) {
-            throw new GameException(e.getMessage());
-        }
-    }
-
-    @Override
-    public final void setUserField(String username, String password, String userFieldKey, String value) throws GameException {
-        try {
-            userController.setUserField(username, password, userFieldKey, value);
-        } catch (IUserController.UserControllerException e) {
-            throw new GameException(e.getMessage());
-        }
-    }
-
-    @Override
-    public final String getUserField(String username, String password, String userFieldKey) throws GameException {
-        try {
-            return userController.getUserField(username, password, userFieldKey);
-        } catch (IUserController.UserControllerException e) {
-            throw new GameException(e.getMessage());
-        }
-    }
-
-    @Override
-    public final Bruger getCurrentUser() throws GameException {
-        try {
-            return userController.getCurrentUser();
-        } catch (IUserController.UserControllerException e) {
-            throw new GameException(e.getMessage());
-        }
-    }
-
-    @Override
-    public final boolean isLoggedIn() throws GameException {
-        return userController.isLoggedIn();
-    }
-
-    /************************************************
      *        PRIVATE METHODS RESIDES HERE!         *
      ************************************************/
-    private static String fetchURL(String url) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-        StringBuilder sb = new StringBuilder();
-        String linje = br.readLine();
-        while (linje != null) {
-            sb.append(linje).append("\n");
-            linje = br.readLine();
-        }
-        return sb.toString();
-    }
-
-    private void getWordsOnline() throws Exception {
-        String data = fetchURL("https://dr.dk");
-
-        data = data.substring(data.indexOf("<body")). // fjern headere
-                replaceAll("<.+?>", " ").toLowerCase(). // fjern tags
-                replaceAll("&#198;", "æ"). // erstat HTML-tegn
-                replaceAll("&#230;", "æ"). // erstat HTML-tegn
-                replaceAll("&#216;", "ø"). // erstat HTML-tegn
-                replaceAll("&#248;", "ø"). // erstat HTML-tegn
-                replaceAll("&oslash;", "ø"). // erstat HTML-tegn
-                replaceAll("&#229;", "å"). // erstat HTML-tegn
-                replaceAll("[^a-zæøå]", " "). // fjern tegn der ikke er bogstaver
-                replaceAll(" [a-zæøå] ", " "). // fjern 1-bogstavsord
-                replaceAll(" [a-zæøå][a-zæøå] ", " "); // fjern 2-bogstavsord
-
-        wordList.clear();
-        wordList.addAll(new HashSet<>(Arrays.asList(data.split(" "))));
-    }
-
     private void initWordList() {
         if (!wordList.isEmpty())
             return;
 
         try {
-            getWordsOnline();
+            wordList = RESTWordService.fetchWords();
         } catch (Exception e) {
             e.printStackTrace();
         }

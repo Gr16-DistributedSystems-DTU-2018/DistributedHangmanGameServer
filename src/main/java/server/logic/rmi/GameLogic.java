@@ -1,7 +1,5 @@
 package server.logic.rmi;
 
-import brugerautorisation.data.Bruger;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -17,7 +15,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public boolean guess(char ch) throws RemoteException {
         try {
             return logic.guess(ch);
-        } catch (server.logic.local.IGameLogic.GameException e) {
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
@@ -26,7 +24,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public void resetScore() throws RemoteException {
         try {
             logic.resetScore();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
@@ -35,7 +33,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public void resetGame() throws RemoteException {
         try {
             logic.resetGame();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
@@ -44,34 +42,34 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public String getGuessedChars() throws RemoteException {
         try {
             return logic.getGuessedChars();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
 
     @Override
-    public String getCurrentGuessedWord() throws RemoteException {
+    public String getWord() throws RemoteException {
         try {
-            return logic.getCurrentGuessedWord();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+            return logic.getWord();
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
 
     @Override
-    public int getCurrentLife() throws RemoteException {
+    public int getLife() throws RemoteException {
         try {
-            return logic.getCurrentLife();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+            return logic.getLife();
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
 
     @Override
-    public int getCurrentScore() throws RemoteException {
+    public int getScore() throws RemoteException {
         try {
-            return logic.getCurrentScore();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+            return logic.getScore();
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
@@ -80,7 +78,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public boolean isCharGuessed(char ch) throws RemoteException {
         try {
             return logic.isCharGuessed(ch);
-        } catch (server.logic.local.IGameLogic.GameException e) {
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
@@ -89,7 +87,7 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public boolean isGameWon() throws RemoteException {
         try {
             return logic.isGameWon();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
@@ -98,70 +96,16 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     public boolean isGameLost() throws RemoteException {
         try {
             return logic.isGameLost();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
 
     @Override
-    public boolean isHighScore() throws RemoteException {
+    public boolean isHighScore(String username, String password) throws RemoteException {
         try {
-            return logic.isHighScore();
-        } catch (server.logic.local.IGameLogic.GameException e) {
-            throw new RemoteException(e.getMessage());
-        }
-    }
-
-    @Override
-    public void logIn(String username, String password) throws RemoteException {
-        try {
-            logic.logIn(username, password);
-        } catch (server.logic.local.IGameLogic.GameException e) {
-            throw new RemoteException(e.getMessage());
-        }
-    }
-
-    @Override
-    public void logOut() throws RemoteException {
-        try {
-            logic.logOut();
-        } catch (server.logic.local.IGameLogic.GameException e) {
-            throw new RemoteException(e.getMessage());
-        }
-    }
-
-    @Override
-    public void setUserField(String username, String password, String userFieldKey, String value) throws RemoteException {
-        try {
-            logic.setUserField(username, password, userFieldKey, value);
-        } catch (server.logic.local.IGameLogic.GameException e) {
-            throw new RemoteException(e.getMessage());
-        }
-    }
-
-    @Override
-    public String getUserField(String username, String password, String userFieldKey) throws RemoteException {
-        try {
-            return logic.getUserField(username, password, userFieldKey);
-        } catch (server.logic.local.IGameLogic.GameException e) {
-            throw new RemoteException(e.getMessage());
-        }
-    }
-
-    @Override
-    public Bruger getCurrentUser() throws RemoteException {
-        try {
-            return logic.getCurrentUser();
-        } catch (server.logic.local.IGameLogic.GameException e) {
-            throw new RemoteException(e.getMessage());
-        }
-    }
-
-    @Override
-    public boolean isLoggedIn() throws RemoteException {
-        try {
-            return logic.isLoggedIn();
-        } catch (server.logic.local.IGameLogic.GameException e) {
+            return logic.isHighScore(username, password);
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
             throw new RemoteException(e.getMessage());
         }
     }
