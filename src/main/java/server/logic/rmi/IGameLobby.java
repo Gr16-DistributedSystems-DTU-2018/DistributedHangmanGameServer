@@ -12,11 +12,14 @@ public interface IGameLobby extends Remote {
 
     IGameLogic getGameLogicInstance(String username) throws RemoteException;
     List<String> getAllCurrentUserNames() throws RemoteException;
-
     int getUserAmount() throws RemoteException;
     Bruger getLoggedInUser(String username) throws RemoteException;
+
     boolean isLoggedIn(String username) throws RemoteException;
     Bruger getUserWithHighestHighscore() throws RemoteException;
+
+    void setUserHighscore(String username, String highscore) throws RemoteException;
+    String getUserHighscore(String username) throws RemoteException;
 
     void sendUserEmail(String username, String password, String subject, String msg) throws RemoteException;
     void sendForgotPasswordEmail(String username, String msg) throws RemoteException;

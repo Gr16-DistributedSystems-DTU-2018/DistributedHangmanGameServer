@@ -21,18 +21,8 @@ public final class MainLocalRMIClient {
         System.out.println("Users logged in: " + lobby.getUserAmount());
         System.out.println("All users logged in: " + lobby.getAllCurrentUserNames());
 
-
         IGameLogic logic = lobby.getGameLogicInstance("s151641");
 
-        System.out.println("Life: " + logic.getLife());
-        System.out.println("Score: " + logic.getScore());
-        System.out.println("Word: " + logic.getWord());
-        System.out.println("Guessed Chars: " + logic.getGuessedChars());
-
-        System.out.println("Life: " + logic.getLife());
-        System.out.println("Score: " + logic.getScore());
-        System.out.println("Word: " + logic.getWord());
-        System.out.println("Guessed Chars: " + logic.getGuessedChars());
 
         /* Log out */
         lobby.logOut("s151641");

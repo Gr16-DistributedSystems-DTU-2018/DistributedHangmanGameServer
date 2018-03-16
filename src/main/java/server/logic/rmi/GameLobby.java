@@ -138,6 +138,40 @@ public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
     }
 
     @Override
+    public void setUserHighscore(String username, String highscore) throws RemoteException {
+        if (!loggedInMap.containsKey(username))
+            throw new IllegalArgumentException(username + " is not registered with a GameLogic instance!");
+
+        if (!isLoggedIn(username))
+            throw new IllegalArgumentException(username + " is not a registered object user!");
+
+        Bruger user = getLoggedInUser(username);
+
+        try {
+            userController.setUserField(username, user.adgangskode, Utils.HIGH_SCORE_FIELD_KEY, highscore);
+        } catch (IUserController.UserControllerException e) {
+            throw new RemoteException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String getUserHighscore(String username) throws RemoteException {
+        if (!loggedInMap.containsKey(username))
+            throw new IllegalArgumentException(username + " is not registered with a GameLogic instance!");
+
+        if (!isLoggedIn(username))
+            throw new IllegalArgumentException(username + " is not a registered object user!");
+
+        Bruger user = getLoggedInUser(username);
+
+        try {
+            return userController.getUserField(username, user.adgangskode, Utils.HIGH_SCORE_FIELD_KEY);
+        } catch (IUserController.UserControllerException e) {
+            throw new RemoteException(e.getMessage());
+        }
+    }
+
+    @Override
     public void sendUserEmail(String username, String password, String subject, String msg) throws RemoteException {
         try {
             userController.sendUserEmail(username, password, subject, msg);

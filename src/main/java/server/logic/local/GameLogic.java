@@ -33,6 +33,14 @@ public final class GameLogic implements IGameLogic, Serializable {
         wordList = new ArrayList<>();
         usedCharList = new ArrayList<>();
 
+        wordList.add("something");
+        wordList.add("terrible");
+        wordList.add("has");
+        wordList.add("happened");
+        wordList.add("oh");
+        wordList.add("sweet");
+        wordList.add("jesus");
+
         try {
             resetScore();
             resetGame();
@@ -205,7 +213,7 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     private String getRandomWord() {
-        if (wordList == null)
+        if (wordList == null || wordList.size() == 0)
             initWordList();
         return wordList.get(new Random().nextInt(wordList.size()));
     }

@@ -34,9 +34,7 @@ public class RESTWordService implements Remote {
             desc = desc.trim().replaceAll(" +", " ");
             String[] splitted = desc.split("\\s+");
 
-            List<String> wordList = Arrays.asList(splitted);
-
-            return wordList;
+            return Arrays.asList(splitted);
         }
         return null;
     }
