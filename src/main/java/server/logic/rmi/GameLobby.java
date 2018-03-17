@@ -7,20 +7,19 @@ import server.util.Utils;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
 
     private final Map<String, IGameLogic> loggedInMap = new HashMap<>();
     private final List<Bruger> loggedInUserObjectList = new ArrayList<>();
 
+    private final Map<String, Integer> bootMap = new HashMap<>();
+
     private final IUserController userController = UserController.getInstance();
 
     public GameLobby() throws RemoteException {
-
+        startBootingTimer();
     }
 
     @Override
@@ -205,6 +204,70 @@ public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
                 break;
             }
         }
+    }
+
+    private void startBootingTimer() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Boot tick starting...");
+
+                try {
+                    System.out.println("Size before: " + getUserAmount());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+                for (int i = 0; i < loggedInUserObjectList.size(); i++) {
+                    String username = loggedInUserObjectList.get(i).brugernavn;
+                    if (!bootMap.containsKey(username)) {
+                        try {
+                            System.out.println("New boot entry: " + username);
+                            bootMap.put(username, getGameLogicInstance(username).getScore());
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                List<String> toBeRemoved = new ArrayList<>();
+
+                for (String username : bootMap.keySet()) {
+                    try {
+                        if (getGameLogicInstance(username).getScore() == bootMap.get(username))
+                            toBeRemoved.add(username);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                for (String username : toBeRemoved) {
+                    System.out.println("Booted: " + username);
+                    try {
+                        logOut(username);
+                        bootMap.remove(username);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // This shall happen at every tick
+                // 1. Fill up the bootList, only with new members that is not already inside.
+                // 2. Check to see if their current scores are equal to the saved scores. If yes, boot them.
+                // 3. If not, save thier new score to their place.
+                //
+
+                try {
+                    System.out.println("Size after: " + getUserAmount());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("Boot tick end.");
+            }
+        }, 0, 3600000);
+
     }
 
 }
