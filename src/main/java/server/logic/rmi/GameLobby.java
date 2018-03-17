@@ -292,8 +292,7 @@ public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
 
                 System.out.println("Boot tick end.");
             }
-        }, 0, 3600000);
-
+        }, 0, 1200000); // 20 minutes
     }
 
 }
