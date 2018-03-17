@@ -1,15 +1,16 @@
-package server.logic.rmi;
+package server.logic.soap;
 
 import brugerautorisation.data.Bruger;
 
+import javax.jws.WebService;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Map;
 
-public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
+@WebService(endpointInterface = "server.logic.soap.GameLobby")
+public final class GameLobby implements IGameLobby {
 
-    private final server.logic.local.IGameLobby lobby;
+    private server.logic.local.IGameLobby lobby;
 
     public GameLobby() throws RemoteException {
         try {
@@ -38,12 +39,15 @@ public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
     }
 
     @Override
-    public IGameLogic getGameLogicInstance(String username) throws RemoteException {
+    public GameLogic getGameLogicInstance(String username) throws RemoteException {
+        /*
         try {
             return lobby.getGameLogicInstance(username);
         } catch (server.logic.local.IGameLobby.GameLobbyException e) {
             throw new RemoteException(e.getMessage());
         }
+        */
+        return null;
     }
 
     @Override

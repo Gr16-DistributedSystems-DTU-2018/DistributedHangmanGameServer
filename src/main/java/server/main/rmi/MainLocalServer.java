@@ -1,4 +1,4 @@
-package server.main;
+package server.main.rmi;
 
 import server.logic.rmi.GameLobby;
 import server.logic.rmi.IGameLobby;
@@ -8,7 +8,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-public final class MainLocalRMIServer {
+public final class MainLocalServer {
 
     public static void main(String[] args) throws Exception {
 

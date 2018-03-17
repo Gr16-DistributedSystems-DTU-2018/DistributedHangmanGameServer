@@ -1,4 +1,4 @@
-package server.main;
+package server.main.rmi;
 
 
 import server.logic.rmi.IGameLobby;
@@ -7,7 +7,7 @@ import server.util.Utils;
 
 import java.rmi.Naming;
 
-public final class MainLocalRMIClient {
+public final class MainLocalClient {
 
     public static void main(String[] args) throws Exception {
         IGameLobby lobby = (IGameLobby) Naming.lookup(Utils.RMI_LOBBY_STUB_URL_LOCAL);
