@@ -171,6 +171,32 @@ public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
     }
 
     @Override
+    public Map<String, Integer> getAllUsersScore() throws RemoteException {
+        Map<String, Integer> userScoreMap = new HashMap<>();
+
+        for (Bruger user : loggedInUserObjectList) {
+            int score = getGameLogicInstance(user.brugernavn).getScore();
+            String username = user.brugernavn;
+            userScoreMap.put(username, score);
+        }
+
+        return userScoreMap;
+    }
+
+    @Override
+    public Map<String, Integer> getAllUsersHighscore() throws RemoteException {
+        Map<String, Integer> userHighscoreMap = new HashMap<>();
+
+        for (Bruger user : loggedInUserObjectList) {
+            int highscore = Integer.parseInt(getUserHighscore(user.brugernavn));
+            String username = user.brugernavn;
+            userHighscoreMap.put(username, highscore);
+        }
+
+        return userHighscoreMap;
+    }
+
+    @Override
     public void sendUserEmail(String username, String password, String subject, String msg) throws RemoteException {
         try {
             userController.sendUserEmail(username, password, subject, msg);

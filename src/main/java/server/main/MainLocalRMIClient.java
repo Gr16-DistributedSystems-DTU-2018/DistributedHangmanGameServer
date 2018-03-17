@@ -23,9 +23,6 @@ public final class MainLocalRMIClient {
 
         IGameLogic logic = lobby.getGameLogicInstance("s151641");
 
-
-        Thread.sleep(200000);
-
         /* Log out */
         lobby.logOut("s151641");
         lobby.logOut("s155005");

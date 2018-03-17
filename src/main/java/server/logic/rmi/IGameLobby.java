@@ -5,6 +5,7 @@ import brugerautorisation.data.Bruger;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 public interface IGameLobby extends Remote {
     void logIn(String username, String password) throws RemoteException;
@@ -20,6 +21,8 @@ public interface IGameLobby extends Remote {
 
     void setUserHighscore(String username, String highscore) throws RemoteException;
     String getUserHighscore(String username) throws RemoteException;
+    Map<String, Integer> getAllUsersScore() throws RemoteException;
+    Map<String, Integer> getAllUsersHighscore() throws RemoteException;
 
     void sendUserEmail(String username, String password, String subject, String msg) throws RemoteException;
     void sendForgotPasswordEmail(String username, String msg) throws RemoteException;
