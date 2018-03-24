@@ -9,8 +9,7 @@ public final class Utils {
 
     public final static String RMI_STUB_URL_BRUGERAUTORISATION = "rmi://javabog.dk/brugeradmin";
 
-    public final static String RMI_STUB_URL_REMOTE_LOGIC_JAVABOG = "rmi://ubuntu4.javabog.dk:" + REMOTE_PORT + "/gamelogicservice";
-    public final static String RMI_STUB_URL_REMOTE_LOGIC = "rmi://localhost:" + REMOTE_PORT + "/gamelogicservice";
+    public final static String RMI_STUB_URL_REMOTE_LOBBY_JAVABOG = "rmi://ubuntu4.javabog.dk:" + REMOTE_PORT + "/lobby";
 
     public final static String HIGH_SCORE_FIELD_KEY = "s151641_highscore";
 
