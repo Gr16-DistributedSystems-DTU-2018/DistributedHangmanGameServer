@@ -21,6 +21,14 @@ public class MainRemoteClient {
         System.out.println("All users logged in: " + lobby.getAllCurrentUserNames());
 
         IGameLogic logic = lobby.getGameLogicInstance("s151641");
+        System.out.println("Highscore: " + lobby.getUserHighscore("s151641"));
+
+        System.out.println("## All high scores ##");
+
+        for (String user : lobby.getAllUsersScore().keySet()) {
+            int highscore = lobby.getAllUsersHighscore().get(user);
+            System.out.println(user + ": " + highscore);
+        }
 
         /* Log out */
         lobby.logOut("s151641");
