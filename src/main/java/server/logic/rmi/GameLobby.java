@@ -110,7 +110,7 @@ public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
     }
 
     @Override
-    public Map<String, Integer> getAllUsersScore() throws RemoteException {
+    public Map<String, Integer> getAllLoggedInUsersScore() throws RemoteException {
         try {
             return lobby.getAllUsersScore();
         } catch (server.logic.local.IGameLobby.GameLobbyException e) {

@@ -21,12 +21,16 @@ public final class MainLocalClient {
         System.out.println("Users logged in: " + lobby.getUserAmount());
         System.out.println("All users logged in: " + lobby.getAllCurrentUserNames());
 
+        System.out.println(lobby.getAllUsersHighscore());
+
         IGameLogic logic = lobby.getGameLogicInstance("s151641");
 
         /* Log out */
         lobby.logOut("s151641");
         lobby.logOut("s155005");
         lobby.logOut("jacno");
+
+        System.out.println(lobby.getAllUsersHighscore());
 
         System.out.println("Users logged in: " + lobby.getUserAmount());
         System.out.println("All users logged in: " + lobby.getAllCurrentUserNames());

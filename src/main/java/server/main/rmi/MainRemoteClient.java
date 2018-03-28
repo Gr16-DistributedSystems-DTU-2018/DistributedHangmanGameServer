@@ -25,7 +25,7 @@ public class MainRemoteClient {
 
         System.out.println("## All high scores ##");
 
-        for (String user : lobby.getAllUsersScore().keySet()) {
+        for (String user : lobby.getAllLoggedInUsersScore().keySet()) {
             int highscore = lobby.getAllUsersHighscore().get(user);
             System.out.println(user + ": " + highscore);
         }

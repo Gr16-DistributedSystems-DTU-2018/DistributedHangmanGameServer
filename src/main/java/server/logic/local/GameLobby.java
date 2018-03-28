@@ -8,6 +8,8 @@ import server.logic.rmi.IGameLogic;
 import server.util.Utils;
 
 import java.rmi.RemoteException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public final class GameLobby implements IGameLobby {
@@ -15,8 +17,10 @@ public final class GameLobby implements IGameLobby {
     private final Map<String, server.logic.rmi.IGameLogic> loggedInMap = new HashMap<>();
     private final List<Bruger> loggedInUserObjectList = new ArrayList<>();
 
+    private final Map<String, Integer> highScoreMap = new HashMap<>();
     private final Map<String, Integer> bootMap = new HashMap<>();
 
+    private final static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private final IUserController userController = UserController.getInstance();
 
     public GameLobby() throws GameLobbyException {
@@ -28,12 +32,12 @@ public final class GameLobby implements IGameLobby {
         Bruger user;
         try {
             user = userController.getUser(username, password);
-            System.out.println("User logged in: " + username + "!");
+            logMessage("User logged in: " + username + "!");
         } catch (IUserController.UserControllerException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
 
-        System.out.println("Attempting to register GameLogic instance for user: " + username + "!");
+        logMessage("Attempting to register GameLogic instance for user: " + username + "!");
 
         if (loggedInMap.containsKey(username))
             throw new IllegalArgumentException(username + " is already registered with a GameLogic instance!");
@@ -44,7 +48,12 @@ public final class GameLobby implements IGameLobby {
         try {
             loggedInMap.put(username, new GameLogic());
             loggedInUserObjectList.add(user);
-            System.out.println("Registered a GameLogic instance for user and object: " + username + "!");
+            logMessage("Registered a GameLogic instance for user and object: " + username + "!");
+
+            /* Get their current high score and add to list */
+            int highscore = Integer.valueOf(getUserHighscore(username));
+            logMessage("Saved high score: " + username + " : " + highscore);
+            highScoreMap.put(username, highscore);
         } catch (RemoteException e) {
             throw new GameLobbyException("Failed to register GameLogic instance for user: " + username + "!");
         }
@@ -52,7 +61,7 @@ public final class GameLobby implements IGameLobby {
 
     @Override
     public void logOut(String username) throws GameLobbyException {
-        System.out.println("Attempting to unregister: " + username + "!");
+        logMessage("Attempting to unregister: " + username + "!");
 
         if (!loggedInMap.containsKey(username))
             throw new IllegalArgumentException(username + " is not registered with a GameLogic instance!");
@@ -60,14 +69,14 @@ public final class GameLobby implements IGameLobby {
         if (!isLoggedIn(username))
             throw new IllegalArgumentException(username + " is not a registered object user!");
 
-        System.out.println("Unregistered: " + username + "!");
+        logMessage("Unregistered: " + username + "!");
         loggedInMap.remove(username);
         removeUserObject(username);
     }
 
     @Override
     public IGameLogic getGameLogicInstance(String username) throws GameLobbyException {
-        System.out.println("Searching for GameLogic instance for user: " + username + "!");
+        logMessage("Searching for GameLogic instance for user: " + username + "!");
 
         if (!loggedInMap.containsKey(username))
             throw new IllegalArgumentException(username + " is not registered with a GameLogic instance!");
@@ -80,13 +89,13 @@ public final class GameLobby implements IGameLobby {
 
     @Override
     public List<String> getAllCurrentUserNames() throws GameLobbyException {
-        System.out.println("Getting all registered user names!");
+        logMessage("Getting all registered user names!");
         return new ArrayList<>(loggedInMap.keySet());
     }
 
     @Override
     public int getUserAmount() throws GameLobbyException {
-        System.out.println("Getting current user amount!");
+        logMessage("Getting current user amount!");
         return loggedInMap.size();
     }
 
@@ -149,6 +158,7 @@ public final class GameLobby implements IGameLobby {
 
         try {
             userController.setUserField(username, user.adgangskode, Utils.HIGH_SCORE_FIELD_KEY, highscore);
+            highScoreMap.put(username, Integer.valueOf(highscore));
         } catch (IUserController.UserControllerException e) {
             throw new GameLobbyException(e.getMessage());
         }
@@ -176,7 +186,7 @@ public final class GameLobby implements IGameLobby {
         Map<String, Integer> userScoreMap = new HashMap<>();
 
         for (Bruger user : loggedInUserObjectList) {
-            int score = 0;
+            int score;
             try {
                 score = getGameLogicInstance(user.brugernavn).getScore();
             } catch (RemoteException e) {
@@ -191,15 +201,7 @@ public final class GameLobby implements IGameLobby {
 
     @Override
     public Map<String, Integer> getAllUsersHighscore() throws GameLobbyException {
-        Map<String, Integer> userHighscoreMap = new HashMap<>();
-
-        for (Bruger user : loggedInUserObjectList) {
-            int highscore = Integer.parseInt(getUserHighscore(user.brugernavn));
-            String username = user.brugernavn;
-            userHighscoreMap.put(username, highscore);
-        }
-
-        return userHighscoreMap;
+        return highScoreMap;
     }
 
     @Override
@@ -243,10 +245,10 @@ public final class GameLobby implements IGameLobby {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("Boot tick starting...");
+                logMessage("Boot tick starting...");
 
                 try {
-                    System.out.println("Size before: " + getUserAmount());
+                    logMessage("Size before: " + getUserAmount());
                 } catch (GameLobbyException e) {
                     e.printStackTrace();
                 }
@@ -256,7 +258,7 @@ public final class GameLobby implements IGameLobby {
                     String username = loggedInUserObjectList.get(i).brugernavn;
                     if (!bootMap.containsKey(username)) {
                         try {
-                            System.out.println("New boot entry: " + username);
+                            logMessage("New boot entry: " + username);
                             try {
                                 bootMap.put(username, getGameLogicInstance(username).getScore());
                             } catch (RemoteException e) {
@@ -280,7 +282,7 @@ public final class GameLobby implements IGameLobby {
                 }
 
                 for (String username : toBeRemoved) {
-                    System.out.println("Booted: " + username);
+                    logMessage("Booted: " + username);
                     try {
                         logOut(username);
                         bootMap.remove(username);
@@ -296,14 +298,19 @@ public final class GameLobby implements IGameLobby {
                 //
 
                 try {
-                    System.out.println("Size after: " + getUserAmount());
+                    logMessage("Size after: " + getUserAmount());
                 } catch (GameLobbyException e) {
                     e.printStackTrace();
                 }
 
-                System.out.println("Boot tick end.");
+                logMessage("Boot tick end.");
             }
         }, 0, 1200000); // 20 minutes
+    }
+
+    private void logMessage(String msg) {
+        String text = "[Server: " + dateFormat.format(new Date()) + "]: " + msg;
+        System.out.println(text);
     }
 
 }
