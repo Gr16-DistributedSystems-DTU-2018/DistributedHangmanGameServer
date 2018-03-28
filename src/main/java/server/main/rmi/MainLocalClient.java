@@ -13,9 +13,9 @@ public final class MainLocalClient {
         IGameLobby lobby = (IGameLobby) Naming.lookup(Utils.RMI_LOBBY_STUB_URL_LOCAL);
 
         /* Log in */
+        lobby.logIn("jacno", "xxx");
         lobby.logIn("s151641", "godkode");
         lobby.logIn("s155005", "anusic");
-        lobby.logIn("jacno", "xxx");
 
         System.out.println(lobby.getLoggedInUser("s151641"));
         System.out.println("Users logged in: " + lobby.getUserAmount());

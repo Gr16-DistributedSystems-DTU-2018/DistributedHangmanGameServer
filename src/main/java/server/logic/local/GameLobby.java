@@ -17,7 +17,7 @@ public final class GameLobby implements IGameLobby {
     private final Map<String, server.logic.rmi.IGameLogic> loggedInMap = new HashMap<>();
     private final List<Bruger> loggedInUserObjectList = new ArrayList<>();
 
-    private final Map<String, Integer> highScoreMap = new HashMap<>();
+    private final Map<String, Integer> highScoreMap = new TreeMap<>();
     private final Map<String, Integer> bootMap = new HashMap<>();
 
     private final static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -182,7 +182,7 @@ public final class GameLobby implements IGameLobby {
     }
 
     @Override
-    public Map<String, Integer> getAllUsersScore() throws GameLobbyException {
+    public Map<String, Integer> getAllLoggedInUsersScore() throws GameLobbyException {
         Map<String, Integer> userScoreMap = new HashMap<>();
 
         for (Bruger user : loggedInUserObjectList) {

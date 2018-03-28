@@ -116,7 +116,7 @@ public final class GameLobby implements IGameLobby {
     @Override
     public Map<String, Integer> getAllUsersScore() throws RemoteException {
         try {
-            return lobby.getAllUsersScore();
+            return lobby.getAllLoggedInUsersScore();
         } catch (server.logic.local.IGameLobby.GameLobbyException e) {
             throw new RemoteException(e.getMessage());
         }
