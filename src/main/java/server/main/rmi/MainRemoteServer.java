@@ -22,7 +22,7 @@ public final class MainRemoteServer {
 
         IGameLobby lobby = new GameLobby();
         Naming.rebind(Utils.RMI_STUB_URL_REMOTE_LOBBY_JAVABOG, lobby);
-        System.out.println("Java RMI local GameLobby server started.");
+        System.out.println("Java RMI remote GameLobby server started.");
     }
 
 }
