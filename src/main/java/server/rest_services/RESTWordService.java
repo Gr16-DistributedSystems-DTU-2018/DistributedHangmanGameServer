@@ -33,16 +33,15 @@ public class RESTWordService implements Remote {
             String desc;
             try {
                 desc = new JSONObject(client.target("https://www.dr.dk/mu-online/api/1.4/programcard/" + slug).request(MediaType.APPLICATION_JSON).get().readEntity(String.class)).getString("Description");
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 continue;
             }
 
             desc = desc.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
             desc = desc.trim().replaceAll(" +", " ");
             splitted.addAll(Arrays.asList(desc.split("\\s+")));
-            return splitted;
         }
-        return null;
+        return splitted;
     }
 
 }
