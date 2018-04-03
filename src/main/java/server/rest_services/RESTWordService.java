@@ -40,6 +40,8 @@ public class RESTWordService implements Remote {
             desc = desc.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
             desc = desc.trim().replaceAll(" +", " ");
             splitted.addAll(Arrays.asList(desc.split("\\s+")));
+
+            return splitted;
         }
         return splitted;
     }
