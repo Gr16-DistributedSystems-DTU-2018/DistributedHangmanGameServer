@@ -6,6 +6,7 @@ import server.logic.rmi.IGameLogic;
 import server.util.Utils;
 
 import java.rmi.Naming;
+import java.util.Map;
 
 public final class MainLocalClient {
 
@@ -13,17 +14,17 @@ public final class MainLocalClient {
         IGameLobby lobby = (IGameLobby) Naming.lookup(Utils.RMI_LOBBY_STUB_URL_LOCAL);
 
         /* Log in */
-        lobby.logIn("jacno", "xxx");
         lobby.logIn("s151641", "godkode");
         lobby.logIn("s155005", "anusic");
+        lobby.logIn("jacno", "xxx");
 
         System.out.println(lobby.getLoggedInUser("s151641"));
         System.out.println("Users logged in: " + lobby.getUserAmount());
         System.out.println("All users logged in: " + lobby.getAllCurrentUserNames());
 
-        System.out.println(lobby.getAllUsersHighscore());
-
         IGameLogic logic = lobby.getGameLogicInstance("s151641");
+
+        System.out.println(logic.isGameWon());
 
         /* Log out */
         lobby.logOut("s151641");
