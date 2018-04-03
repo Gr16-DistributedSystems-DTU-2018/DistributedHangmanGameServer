@@ -17,7 +17,7 @@ public final class GameLobby implements IGameLobby {
     private final Map<String, server.logic.rmi.IGameLogic> loggedInMap = new HashMap<>();
     private final List<Bruger> loggedInUserObjectList = new ArrayList<>();
 
-    private final Map<String, Integer> highScoreMap = new HashMap<>();
+    private final Map<String, Integer> highScoreMap = new TreeMap<>();
     private final Map<String, Integer> bootMap = new HashMap<>();
 
     private final static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -201,23 +201,9 @@ public final class GameLobby implements IGameLobby {
 
     @Override
     public Map<String, Integer> getAllUsersHighscore() throws GameLobbyException {
-        //convert map to a List
-        List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(highScoreMap.entrySet());
 
-        //sorting the list with a comparator
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return (o2.getValue()).compareTo(o1.getValue());
-            }
-        });
 
-        //convert sortedMap back to Map
-        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-        for (Map.Entry<String, Integer> entry : list) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return sortedMap;
+        return highScoreMap;
     }
 
     @Override
