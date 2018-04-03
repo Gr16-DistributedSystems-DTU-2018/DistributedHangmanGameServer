@@ -182,7 +182,7 @@ public final class GameLobby implements IGameLobby {
     }
 
     @Override
-    public Map<String, Integer> getAllLoggedInUsersScore() throws GameLobbyException {
+    public Map<String, Integer> getAllUsersScore() throws GameLobbyException {
         Map<String, Integer> userScoreMap = new HashMap<>();
 
         for (Bruger user : loggedInUserObjectList) {
