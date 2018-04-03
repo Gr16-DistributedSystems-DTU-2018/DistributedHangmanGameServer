@@ -24,13 +24,7 @@ public final class MainLocalClient {
 
         IGameLogic logic = lobby.getGameLogicInstance("s151641");
 
-        Map<String, Integer> map = lobby.getAllUsersHighscore();
-        int i = 0;
-        for (String key : map.keySet()) {
-            int value = map.get(key);
-            System.out.println(i + ": " + value);
-            i++;
-        }
+        System.out.println(logic.isGameWon());
 
         /* Log out */
         lobby.logOut("s151641");

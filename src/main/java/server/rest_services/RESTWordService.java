@@ -9,7 +9,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.rmi.Remote;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,27 +22,21 @@ public class RESTWordService implements Remote {
         JSONObject json = new JSONObject(responseStr);
         JSONArray array = json.getJSONArray("Items");
 
-        List<String> splitted = new ArrayList<>();
-
         for (int i = 0; i < array.length(); i++) {
             JSONObject o = (JSONObject) array.get(i);
             String slug = o.getString("SeriesSlug");
             String title = o.getString("SeriesTitle");
+            System.out.println("Title: " + title);
 
-            String desc;
-            try {
-                desc = new JSONObject(client.target("https://www.dr.dk/mu-online/api/1.4/programcard/" + slug).request(MediaType.APPLICATION_JSON).get().readEntity(String.class)).getString("Description");
-            } catch (Exception e) {
-                continue;
-            }
+            String desc = new JSONObject(client.target("https://www.dr.dk/mu-online/api/1.4/programcard/" + slug).request(MediaType.APPLICATION_JSON).get().readEntity(String.class)).getString("Description");
 
             desc = desc.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
             desc = desc.trim().replaceAll(" +", " ");
-            splitted.addAll(Arrays.asList(desc.split("\\s+")));
+            String[] splitted = desc.split("\\s+");
 
-            return splitted;
+            return Arrays.asList(splitted);
         }
-        return splitted;
+        return null;
     }
 
 }
