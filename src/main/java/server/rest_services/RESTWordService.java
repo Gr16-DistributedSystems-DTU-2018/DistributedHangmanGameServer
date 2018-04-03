@@ -34,7 +34,6 @@ public class RESTWordService implements Remote {
             try {
                 desc = new JSONObject(client.target("https://www.dr.dk/mu-online/api/1.4/programcard/" + slug).request(MediaType.APPLICATION_JSON).get().readEntity(String.class)).getString("Description");
             } catch (Exception e) {
-                System.out.println(e.getMessage());
                 continue;
             }
 
