@@ -153,11 +153,14 @@ public final class GameLogic implements IGameLogic, Serializable {
      *        PRIVATE METHODS RESIDES HERE!         *
      ************************************************/
     private void initWordList() {
+        return;
+        /*
         try {
             wordList = RESTWordService.fetchWords();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
     }
 
     private String createHiddenWord() {
