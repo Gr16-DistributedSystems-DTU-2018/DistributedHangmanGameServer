@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.rmi.Remote;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RESTWordService implements Remote {
@@ -39,7 +38,7 @@ public class RESTWordService implements Remote {
 
             desc = desc.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
             desc = desc.trim().replaceAll(" +", " ");
-            splitted.addAll(Arrays.asList(desc.split("\\s+")));
+            return splitted;
         }
 
         return splitted;
