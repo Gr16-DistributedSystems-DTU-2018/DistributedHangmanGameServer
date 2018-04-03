@@ -33,13 +33,7 @@ public final class GameLogic implements IGameLogic, Serializable {
         wordList = new ArrayList<>();
         usedCharList = new ArrayList<>();
 
-        wordList.add("something");
-        wordList.add("terrible");
-        wordList.add("has");
-        wordList.add("happened");
-        wordList.add("oh");
-        wordList.add("sweet");
-        wordList.add("jesus");
+        wordList.add("error");
 
         try {
             resetScore();
@@ -159,9 +153,6 @@ public final class GameLogic implements IGameLogic, Serializable {
      *        PRIVATE METHODS RESIDES HERE!         *
      ************************************************/
     private void initWordList() {
-        if (!wordList.isEmpty())
-            return;
-
         try {
             wordList = RESTWordService.fetchWords();
         } catch (Exception e) {

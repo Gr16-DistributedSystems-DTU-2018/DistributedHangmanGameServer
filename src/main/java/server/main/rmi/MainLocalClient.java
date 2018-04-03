@@ -6,6 +6,7 @@ import server.logic.rmi.IGameLogic;
 import server.util.Utils;
 
 import java.rmi.Naming;
+import java.util.Map;
 
 public final class MainLocalClient {
 
@@ -21,9 +22,15 @@ public final class MainLocalClient {
         System.out.println("Users logged in: " + lobby.getUserAmount());
         System.out.println("All users logged in: " + lobby.getAllCurrentUserNames());
 
-        System.out.println(lobby.getAllUsersHighscore());
-
         IGameLogic logic = lobby.getGameLogicInstance("s151641");
+
+        Map<String, Integer> map = lobby.getAllUsersHighscore();
+        int i = 0;
+        for (String key : map.keySet()) {
+            int value = map.get(key);
+            System.out.println(i + ": " + value);
+            i++;
+        }
 
         /* Log out */
         lobby.logOut("s151641");
