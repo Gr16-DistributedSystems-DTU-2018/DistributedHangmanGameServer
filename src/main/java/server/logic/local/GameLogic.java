@@ -33,8 +33,6 @@ public final class GameLogic implements IGameLogic, Serializable {
         wordList = new ArrayList<>();
         usedCharList = new ArrayList<>();
 
-        wordList.add("error");
-
         try {
             resetScore();
             resetGame();
@@ -155,7 +153,7 @@ public final class GameLogic implements IGameLogic, Serializable {
     private void initWordList() {
         try {
             wordList = RESTWordService.fetchWords();
-            Thread.sleep(1000);
+            Thread.sleep(300);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,8 +203,6 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     private String getRandomWord() {
-        if (wordList == null || wordList.size() == 0)
-            initWordList();
         return wordList.get(new Random().nextInt(wordList.size()));
     }
 

@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.rmi.Remote;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RESTWordService implements Remote {
@@ -22,7 +23,8 @@ public class RESTWordService implements Remote {
         JSONObject json = new JSONObject(responseStr);
         JSONArray array = json.getJSONArray("Items");
 
-        List<String> splitted = new ArrayList<>();
+        List<String> splittedArray = new ArrayList<>();
+        splittedArray.add("error");
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject o = (JSONObject) array.get(i);
@@ -38,10 +40,11 @@ public class RESTWordService implements Remote {
 
             desc = desc.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
             desc = desc.trim().replaceAll(" +", " ");
-            return splitted;
-        }
+            splittedArray.addAll(Arrays.asList(desc.split("\\s+")));
+            return splittedArray;
 
-        return splitted;
+        }
+        return splittedArray;
     }
 
 }
