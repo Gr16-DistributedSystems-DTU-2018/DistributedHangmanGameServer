@@ -5,6 +5,7 @@ import server.controller.IUserController;
 import server.controller.UserController;
 import server.logic.rmi.GameLogic;
 import server.logic.rmi.IGameLogic;
+import server.rest_services.RESTWordService;
 import server.util.Utils;
 
 import java.rmi.RemoteException;
@@ -23,7 +24,10 @@ public final class GameLobby implements IGameLobby {
     private final static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private final IUserController userController = UserController.getInstance();
 
+    private final List<String> wordList;
+
     public GameLobby() throws GameLobbyException {
+        wordList = initWordList();
         startBootingTimer();
     }
 
@@ -46,7 +50,7 @@ public final class GameLobby implements IGameLobby {
             throw new IllegalArgumentException(username + " is already a registered object user!");
 
         try {
-            loggedInMap.put(username, new GameLogic());
+            loggedInMap.put(username, new GameLogic(wordList));
             loggedInUserObjectList.add(user);
             logMessage("Registered a GameLogic instance for user and object: " + username + "!");
 
@@ -327,6 +331,17 @@ public final class GameLobby implements IGameLobby {
     private void logMessage(String msg) {
         String text = "[Server: " + dateFormat.format(new Date()) + "]: " + msg;
         System.out.println(text);
+    }
+
+    private List<String> initWordList() {
+        try {
+            return RESTWordService.fetchWords();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<String> wordList = new ArrayList<>();
+        wordList.add("error");
+        return wordList;
     }
 
 }

@@ -24,7 +24,6 @@ public class RESTWordService implements Remote {
         JSONArray array = json.getJSONArray("Items");
 
         List<String> splittedArray = new ArrayList<>();
-        splittedArray.add("error");
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject o = (JSONObject) array.get(i);

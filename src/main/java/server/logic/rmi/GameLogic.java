@@ -2,13 +2,14 @@ package server.logic.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
 
     private server.logic.local.IGameLogic logic;
 
-    public GameLogic() throws RemoteException {
-        logic = new server.logic.local.GameLogic();
+    public GameLogic(List<String> wordList) throws RemoteException {
+        logic = new server.logic.local.GameLogic(wordList);
     }
 
     @Override

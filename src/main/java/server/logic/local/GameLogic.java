@@ -3,7 +3,6 @@ package server.logic.local;
 import brugerautorisation.data.Bruger;
 import server.controller.IUserController;
 import server.controller.UserController;
-import server.rest_services.RESTWordService;
 import server.util.Utils;
 
 import java.io.Serializable;
@@ -29,8 +28,9 @@ public final class GameLogic implements IGameLogic, Serializable {
 
     private final IUserController userController = UserController.getInstance();
 
-    public GameLogic() {
-        wordList = new ArrayList<>();
+    public GameLogic(List<String> wordList) {
+        this.wordList = wordList;
+        System.out.println(wordList);
         usedCharList = new ArrayList<>();
 
         try {
@@ -70,7 +70,6 @@ public final class GameLogic implements IGameLogic, Serializable {
 
     @Override
     public final void resetGame() throws GameLogicException {
-        initWordList();
         word = getRandomWord();
         hiddenWord = createHiddenWord();
         life = MAXIMUM_LIFE;
@@ -150,15 +149,6 @@ public final class GameLogic implements IGameLogic, Serializable {
     /************************************************
      *        PRIVATE METHODS RESIDES HERE!         *
      ************************************************/
-    private void initWordList() {
-        try {
-            wordList = RESTWordService.fetchWords();
-            Thread.sleep(300);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private String createHiddenWord() {
         if (word == null)
             word = getRandomWord();
