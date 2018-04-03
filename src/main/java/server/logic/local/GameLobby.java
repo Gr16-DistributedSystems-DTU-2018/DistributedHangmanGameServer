@@ -201,6 +201,8 @@ public final class GameLobby implements IGameLobby {
 
     @Override
     public Map<String, Integer> getAllUsersHighscore() throws GameLobbyException {
+
+
         return highScoreMap;
     }
 
