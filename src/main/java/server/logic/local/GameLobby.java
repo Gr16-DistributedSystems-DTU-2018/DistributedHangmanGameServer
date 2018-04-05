@@ -66,13 +66,6 @@ public final class GameLobby implements IGameLobby {
     @Override
     public void logOut(String username) throws GameLobbyException {
         logMessage("Attempting to unregister: " + username + "!");
-
-        if (!loggedInMap.containsKey(username))
-            throw new IllegalArgumentException(username + " is not registered with a GameLogic instance!");
-
-        if (!isLoggedIn(username))
-            throw new IllegalArgumentException(username + " is not a registered object user!");
-
         logMessage("Unregistered: " + username + "!");
         loggedInMap.remove(username);
         removeUserObject(username);
