@@ -218,6 +218,11 @@ public final class GameLobby implements IGameLobby {
     }
 
     @Override
+    public List<String> getAllWords() throws GameLobbyException {
+        return wordList;
+    }
+
+    @Override
     public void sendUserEmail(String username, String password, String subject, String msg) throws GameLobbyException {
         try {
             userController.sendUserEmail(username, password, subject, msg);

@@ -22,6 +22,7 @@ public interface IGameLobby {
     String getUserHighscore(String username) throws GameLobbyException;
     Map<String, Integer> getAllLoggedInUsersScore() throws GameLobbyException;
     Map<String, Integer> getAllUsersHighscore() throws GameLobbyException;
+    List<String> getAllWords() throws GameLobbyException;
 
     void sendUserEmail(String username, String password, String subject, String msg) throws GameLobbyException;
     void sendForgotPasswordEmail(String username, String msg) throws GameLobbyException;

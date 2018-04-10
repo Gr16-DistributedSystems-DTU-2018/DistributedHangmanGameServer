@@ -8,6 +8,7 @@ public interface IGameLogic {
 
     String getGuessedChars() throws GameLogicException;
     String getWord() throws GameLogicException;
+    void setWord(String word) throws GameLogicException;
 
     int getLife() throws GameLogicException;
     int getScore() throws GameLogicException;

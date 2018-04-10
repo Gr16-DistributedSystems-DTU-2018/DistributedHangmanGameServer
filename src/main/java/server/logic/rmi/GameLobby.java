@@ -128,6 +128,15 @@ public final class GameLobby extends UnicastRemoteObject implements IGameLobby {
     }
 
     @Override
+    public List<String> getAllWords() throws RemoteException {
+        try {
+            return lobby.getAllWords();
+        } catch (server.logic.local.IGameLobby.GameLobbyException e) {
+            throw new RemoteException(e.getMessage());
+        }
+    }
+
+    @Override
     public void sendUserEmail(String username, String password, String subject, String msg) throws RemoteException {
         try {
             lobby.sendUserEmail(username, password, subject, msg);

@@ -90,6 +90,11 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     @Override
+    public void setWord(String word) throws GameLogicException {
+        this.word = word;
+    }
+
+    @Override
     public int getLife() throws GameLogicException {
         return life;
     }

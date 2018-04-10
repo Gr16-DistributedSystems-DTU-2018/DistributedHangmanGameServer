@@ -11,6 +11,8 @@ public interface IGameLogic extends Remote {
 
     String getGuessedChars() throws RemoteException;
     String getWord() throws RemoteException;
+    void setWord(String word) throws RemoteException;
+
     int getLife() throws RemoteException;
     int getScore() throws RemoteException;
 

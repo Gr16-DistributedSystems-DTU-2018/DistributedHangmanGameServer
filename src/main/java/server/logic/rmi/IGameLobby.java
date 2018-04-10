@@ -23,6 +23,7 @@ public interface IGameLobby extends Remote {
     String getUserHighscore(String username) throws RemoteException;
     Map<String, Integer> getAllLoggedInUsersScore() throws RemoteException;
     Map<String, Integer> getAllUsersHighscore() throws RemoteException;
+    List<String> getAllWords() throws RemoteException;
 
     void sendUserEmail(String username, String password, String subject, String msg) throws RemoteException;
     void sendForgotPasswordEmail(String username, String msg) throws RemoteException;

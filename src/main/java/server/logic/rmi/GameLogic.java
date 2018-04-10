@@ -58,6 +58,15 @@ public final class GameLogic extends UnicastRemoteObject implements IGameLogic {
     }
 
     @Override
+    public void setWord(String word) throws RemoteException {
+        try {
+            logic.setWord(word);
+        } catch (server.logic.local.IGameLogic.GameLogicException e) {
+            throw new RemoteException(e.getMessage());
+        }
+    }
+
+    @Override
     public int getLife() throws RemoteException {
         try {
             return logic.getLife();
