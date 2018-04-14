@@ -30,7 +30,6 @@ public final class GameLogic implements IGameLogic, Serializable {
 
     public GameLogic(List<String> wordList) {
         this.wordList = wordList;
-        System.out.println(wordList);
         usedCharList = new ArrayList<>();
 
         try {
@@ -198,7 +197,9 @@ public final class GameLogic implements IGameLogic, Serializable {
     }
 
     private String getRandomWord() {
-        return wordList.get(new Random().nextInt(wordList.size()));
+        word = wordList.get(new Random().nextInt(wordList.size()));
+        GameLobby.logMessage("Word: " + word);
+        return word;
     }
 
 }

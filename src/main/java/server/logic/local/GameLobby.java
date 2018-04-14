@@ -24,11 +24,28 @@ public final class GameLobby implements IGameLobby {
     private final static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private final IUserController userController = UserController.getInstance();
 
-    private final List<String> wordList;
+    private List<String> wordList;
 
     public GameLobby() throws GameLobbyException {
         wordList = initWordList();
+
+        while (wordList.isEmpty()) {
+            logMessage("Word list is empty!");
+            logMessage("Attempting to get new words in 5 seconds...");
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            wordList = initWordList();
+        }
+
+        logMessage("Word list initialized: Size: " + wordList.size());
+
         startBootingTimer();
+
     }
 
     @Override
@@ -326,7 +343,7 @@ public final class GameLobby implements IGameLobby {
         }, 0, 1200000); // 20 minutes
     }
 
-    private void logMessage(String msg) {
+    public static void logMessage(String msg) {
         String text = "[Server: " + dateFormat.format(new Date()) + "]: " + msg;
         System.out.println(text);
     }
