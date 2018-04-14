@@ -160,7 +160,7 @@ public final class GameLogic implements IGameLogic, Serializable {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < word.length(); i++)
-            sb.append("•");
+            sb.append("*");
         hiddenWord = sb.toString();
 
         return hiddenWord;
