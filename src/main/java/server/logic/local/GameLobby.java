@@ -29,8 +29,8 @@ public final class GameLobby implements IGameLobby {
     public GameLobby() throws GameLobbyException {
         wordList = initWordList();
 
-        while (wordList.isEmpty()) {
-            logMessage("Word list is empty!");
+        while (wordList.isEmpty() || wordList.size() == 1) {
+            logMessage("Word list is empty or size is 1!");
             logMessage("Attempting to get new words in 5 seconds...");
 
             try {
@@ -43,6 +43,7 @@ public final class GameLobby implements IGameLobby {
         }
 
         logMessage("Word list initialized: Size: " + wordList.size());
+        logMessage("Words: " + wordList);
 
         startBootingTimer();
 
