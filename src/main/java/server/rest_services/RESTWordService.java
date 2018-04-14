@@ -17,7 +17,7 @@ public class RESTWordService implements Remote {
 
     public static List<String> fetchWords() throws JSONException {
         Client client = ClientBuilder.newClient();
-        Response response = client.target("https://www.dr.dk/mu-online/api/1.4/list/view/mostviewed?limit=20").request(MediaType.APPLICATION_JSON).get();
+        Response response = client.target("https://www.dr.dk/mu-online/api/1.4/list/view/mostviewed?limit=5").request(MediaType.APPLICATION_JSON).get();
         String responseStr = response.readEntity(String.class);
 
         JSONObject json = new JSONObject(responseStr);
@@ -28,7 +28,6 @@ public class RESTWordService implements Remote {
         for (int i = 0; i < array.length(); i++) {
             JSONObject o = (JSONObject) array.get(i);
             String slug = o.getString("SeriesSlug");
-            String title = o.getString("SeriesTitle");
 
             String desc;
             try {
@@ -40,9 +39,8 @@ public class RESTWordService implements Remote {
             desc = desc.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
             desc = desc.trim().replaceAll(" +", " ");
             splittedArray.addAll(Arrays.asList(desc.split("\\s+")));
-            return splittedArray;
-
         }
+
         return splittedArray;
     }
 
