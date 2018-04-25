@@ -17,7 +17,7 @@ public class RESTWordService implements Remote {
 
     public static List<String> fetchWords() throws JSONException {
         Client client = ClientBuilder.newClient();
-        Response response = client.target("https://www.dr.dk/mu-online/api/1.4/list/view/mostviewed?limit=5").request(MediaType.APPLICATION_JSON).get();
+        Response response = client.target("https://www.dr.dk/mu-online/api/1.4/list/view/mostviewed?limit=50").request(MediaType.APPLICATION_JSON).get();
         String responseStr = response.readEntity(String.class);
 
         JSONObject json = new JSONObject(responseStr);
